@@ -14,7 +14,7 @@ RUN npm install -g corepack@0.24.1 && corepack enable
 COPY . .
 
 # Установка зависимостей без проверки файла блокировки
-RUN pnpm install --no-frozen-lockfile
+RUN pnpm install --no-frozen-lockfile --ignore-scripts
 
 # Сборка проекта
 RUN pnpm build
