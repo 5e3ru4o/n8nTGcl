@@ -30,13 +30,16 @@ ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 # Экспозиция порта
 EXPOSE $PORT
 
+# Создаем индексный файл для пакета
+WORKDIR /root/.n8n/custom
+RUN echo 'module.exports = require("./nodes/telegram-client");' > index.js
+
 # Копируем файлы узла Telegram Client
 COPY telegram-client.js /root/.n8n/custom/nodes/
 COPY telegram.svg /root/.n8n/custom/images/
 
 # Создаем package.json для нашего узла
-WORKDIR /root/.n8n/custom
-RUN echo '{"name":"n8n-nodes-custom","version":"1.0.0","description":"Custom nodes for n8n","main":"index.js","scripts":{"test":"echo \"Error: no test specified\" && exit 1"},"keywords":["n8n","nodes"],"author":"","license":"ISC","n8n":{"nodes":["nodes/telegram-client.js"]}}' > package.json
+RUN echo '{"name":"n8n-nodes-telegram-client","version":"1.0.0","description":"Telegram Client node for n8n","main":"index.js","scripts":{"test":"echo \"Error: no test specified\" && exit 1"},"keywords":["n8n","telegram"],"author":"","license":"ISC","n8n":{"nodes":["nodes/telegram-client"]}}' > package.json
 
 # Запуск n8n
 CMD ["sh", "-c", "ls -la /root/.n8n/custom && ls -la /root/.n8n/custom/nodes && cat /root/.n8n/custom/package.json && n8n start"]
