@@ -1,33 +1,18 @@
-FROM node:20-alpine
+FROM docker.n8n.io/n8nio/n8n:latest
 
-WORKDIR /app
-
-# Установка зависимостей
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/*/package.json ./packages/
-COPY packages/@n8n/*/package.json ./packages/@n8n/
-
-# Установка corepack и pnpm
-RUN npm install -g corepack@0.24.1 && corepack enable
-
-# Копирование всего проекта
-COPY . .
-
-# Установка зависимостей без проверки файла блокировки
-RUN pnpm install --no-frozen-lockfile --ignore-scripts
-
-# Сборка проекта
-RUN pnpm build
+# Копирование пользовательских узлов
+COPY packages/custom-nodes/n8n-nodes-telegram-client /tmp/n8n-nodes-telegram-client
 
 # Установка пользовательских узлов
-RUN mkdir -p /root/.n8n/custom
-RUN cp -r /app/packages/custom-nodes/n8n-nodes-telegram-client /root/.n8n/custom/ && \
-    cd /root/.n8n/custom/n8n-nodes-telegram-client && \
+USER root
+RUN mkdir -p /home/node/.n8n/custom && \
+    cp -r /tmp/n8n-nodes-telegram-client /home/node/.n8n/custom/ && \
+    cd /home/node/.n8n/custom/n8n-nodes-telegram-client && \
     npm install && \
-    npm run build
+    npm run build && \
+    chown -R node:node /home/node/.n8n
+
+USER node
 
 # Экспозиция порта
 EXPOSE 5678
-
-# Запуск n8n
-CMD ["pnpm", "start"]
