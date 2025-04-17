@@ -35,21 +35,8 @@ COPY telegram-client.js /root/.n8n/custom/nodes/
 COPY telegram.svg /root/.n8n/custom/images/
 
 # Создаем package.json для нашего узла
-RUN echo '{
-  "name": "n8n-nodes-custom",
-  "version": "1.0.0",
-  "description": "Custom nodes for n8n",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": ["n8n", "nodes"],
-  "author": "",
-  "license": "ISC",
-  "n8n": {
-    "nodes": ["nodes/telegram-client.js"]
-  }
-}' > /root/.n8n/custom/package.json
+WORKDIR /root/.n8n/custom
+RUN echo '{"name":"n8n-nodes-custom","version":"1.0.0","description":"Custom nodes for n8n","main":"index.js","scripts":{"test":"echo \"Error: no test specified\" && exit 1"},"keywords":["n8n","nodes"],"author":"","license":"ISC","n8n":{"nodes":["nodes/telegram-client.js"]}}' > package.json
 
 # Запуск n8n
 CMD ["sh", "-c", "ls -la /root/.n8n/custom && ls -la /root/.n8n/custom/nodes && cat /root/.n8n/custom/package.json && n8n start"]
