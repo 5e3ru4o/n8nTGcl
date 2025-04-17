@@ -6,11 +6,13 @@ RUN apk add --no-cache git python3 build-base curl
 # Установка n8n
 RUN npm install -g n8n
 
-# Создание директории для telegram-api-server
+# Создание директорий
+# Для telegram-api-server
 RUN mkdir -p /opt/telegram-api-server/telegram-data
-
-# Создание директории для workflow
+# Для workflow
 RUN mkdir -p /root/.n8n/workflows
+# Создаем пустую директорию custom, чтобы избежать ошибок
+RUN mkdir -p /root/.n8n/custom
 
 # Использование переменной окружения PORT для Railway
 ENV PORT=5678
@@ -35,7 +37,7 @@ RUN echo 'version: "3"\n\nservices:\n  telegram-api-server:\n    image: telegram
 
 # Создаем скрипт запуска
 WORKDIR /app
-RUN echo '#!/bin/sh\n\n# Проверяем содержимое директорий\nls -la /root/.n8n/workflows\nls -la /opt/telegram-api-server\n\n# Запускаем n8n\nn8n start\n' > start.sh
+RUN echo '#!/bin/sh\n\n# Проверяем содержимое директорий\necho "\n\n=== Содержимое директории /root/.n8n/workflows ==="\nls -la /root/.n8n/workflows\n\necho "\n\n=== Содержимое директории /opt/telegram-api-server ==="\nls -la /opt/telegram-api-server\n\n# Запускаем n8n\necho "\n\n=== Запуск n8n ==="\nn8n start\n' > start.sh
 RUN chmod +x start.sh
 
 # Запуск n8n
