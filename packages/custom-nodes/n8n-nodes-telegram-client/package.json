@@ -1,0 +1,58 @@
+{
+  "name": "n8n-nodes-telegram-client",
+  "version": "0.1.6",
+  "description": "n8n node for Telegram Client API with full user capabilities",
+  "keywords": [
+    "n8n-community-node-package"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/ofekb/n8n-nodes-telegram-client",
+  "author": {
+    "name": "Ofek",
+    "telegram": "@AppDev420"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ofekb/n8n-nodes-telegram-client.git"
+  },
+  "main": "dist/nodes/TelegramClient/TelegramClient.node.js",
+  "scripts": {
+    "build": "tsc && gulp build:icons && cp -R types dist/types",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint nodes credentials --ext .ts",
+    "lintfix": "eslint nodes credentials --ext .ts --fix",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/TelegramClient.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/TelegramClient/TelegramClient.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/form-data": "^2.5.2",
+    "@types/node": "^16.11.7",
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
+    "@typescript-eslint/parser": "^5.45.1",
+    "eslint": "^8.57.1",
+    "eslint-plugin-n8n-nodes-base": "^1.16.3",
+    "gulp": "^4.0.2",
+    "n8n-core": "^1.14.1",
+    "n8n-workflow": "^1.48.0",
+    "prettier": "^2.8.0",
+    "typescript": "~4.8.4"
+  },
+  "dependencies": {
+    "@mtproto/core": "^6.3.0",
+    "input": "^1.0.1",
+    "path": "^0.12.7",
+    "util": "^0.12.5"
+  }
+}
