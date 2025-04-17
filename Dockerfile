@@ -1,5 +1,9 @@
 FROM docker.n8n.io/n8nio/n8n:latest
 
+# Установка Git
+USER root
+RUN apt-get update && apt-get install -y git && apt-get clean
+
 # Копирование пользовательских узлов
 COPY packages/custom-nodes/n8n-nodes-telegram-client /tmp/n8n-nodes-telegram-client
 
