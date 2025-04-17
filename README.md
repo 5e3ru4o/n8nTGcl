@@ -1,5 +1,51 @@
 ![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
 
+# n8n с интеграцией Telegram User API
+
+## Интеграция с Telegram User API
+
+Этот проект добавляет в n8n возможность отправлять сообщения через ваш личный аккаунт Telegram (не бота). Интеграция основана на [telegram-user-api](https://github.com/CreatmanCEO/telegram-user-api).
+
+### Настройка
+
+1. Получите API_ID и API_HASH для Telegram:
+   - Перейдите на https://my.telegram.org/auth
+   - Войдите в свой аккаунт Telegram
+   - Выберите "API development tools"
+   - Заполните форму (можно указать любое название приложения)
+   - Сохраните полученные api_id и api_hash
+
+2. Добавьте переменные окружения в Railway:
+   - `API_ID` - ваш Telegram API ID
+   - `API_HASH` - ваш Telegram API Hash
+
+3. После запуска n8n создайте новый Workflow с названием "telegramUserAPI":
+   - Добавьте узел Function
+   - Скопируйте содержимое файла `/root/.n8n/workflows/telegramUserAgent.js` в этот узел
+   - Сохраните и активируйте этот Workflow
+
+4. Для использования в других Workflow:
+   - Добавьте новый узел "Workflow"
+   - Настройте его следующим образом:
+     - Имя: `telegramUserAgent`
+     - Workflow ID: выберите созданный ранее "telegramUserAPI"
+
+### Примеры использования
+
+```javascript
+// Отправка сообщения
+{
+  "command": "send_message",
+  "user": "username", // имя пользователя или ID чата
+  "message": "Привет! Это сообщение отправлено через n8n."
+}
+
+// Получение списка контактов
+{
+  "command": "get_contacts"
+}
+```
+
 # n8n - Secure Workflow Automation for Technical Teams
 
 n8n is a workflow automation platform that gives technical teams the flexibility of code with the speed of no-code. With 400+ integrations, native AI capabilities, and a fair-code license, n8n lets you build powerful automations while maintaining full control over your data and deployments.
