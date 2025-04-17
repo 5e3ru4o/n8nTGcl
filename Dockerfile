@@ -10,9 +10,11 @@ RUN npm install -g n8n
 RUN mkdir -p /root/.n8n/custom
 
 # Установка Telegram Client из GitHub
-RUN cd /root/.n8n/custom && \
-    npm init -y && \
-    npm install github:ofekb/n8n-nodes-telegram-client
+WORKDIR /root/.n8n/custom
+RUN npm init -y
+RUN npm install github:ofekb/n8n-nodes-telegram-client
+RUN ls -la
+RUN npm list
 
 # Установка рабочей директории
 WORKDIR /app
@@ -24,10 +26,11 @@ ENV NODE_ENV=production
 ENV N8N_METRICS=false
 ENV N8N_DIAGNOSTICS=false
 ENV N8N_USER_FOLDER=/root/.n8n
+ENV N8N_CUSTOM_EXTENSIONS=/root/.n8n/custom
 ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 
 # Экспозиция порта
 EXPOSE $PORT
 
-# Запуск n8n
-CMD ["n8n", "start"]
+# Запуск n8n с выводом информации о пакетах
+CMD ["sh", "-c", "ls -la /root/.n8n/custom && n8n start"]
