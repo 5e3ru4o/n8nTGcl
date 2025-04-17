@@ -1,22 +1,34 @@
-FROM docker.n8n.io/n8nio/n8n:latest
+FROM node:20-alpine
 
-# Установка Git
-USER root
-RUN apt-get update && apt-get install -y git && apt-get clean
+# Установка необходимых пакетов
+RUN apk add --no-cache git python3 build-base
+
+# Установка n8n
+RUN npm install -g n8n
+
+# Создание директории для пользовательских узлов
+RUN mkdir -p /root/.n8n/custom
 
 # Копирование пользовательских узлов
-COPY packages/custom-nodes/n8n-nodes-telegram-client /tmp/n8n-nodes-telegram-client
+WORKDIR /app
+COPY packages/custom-nodes/n8n-nodes-telegram-client /root/.n8n/custom/n8n-nodes-telegram-client
 
-# Установка пользовательских узлов
-USER root
-RUN mkdir -p /home/node/.n8n/custom && \
-    cp -r /tmp/n8n-nodes-telegram-client /home/node/.n8n/custom/ && \
-    cd /home/node/.n8n/custom/n8n-nodes-telegram-client && \
-    npm install && \
-    npm run build && \
-    chown -R node:node /home/node/.n8n
+# Установка и сборка пользовательских узлов
+WORKDIR /root/.n8n/custom/n8n-nodes-telegram-client
 
-USER node
+# Изменение ссылок на GitHub в package.json
+RUN sed -i 's|"github:ofekb/n8n-nodes-telegram-client"|"*"|g' package.json && \
+    sed -i 's|"url": "https://github.com/ofekb/n8n-nodes-telegram-client.git"|"url": "https://example.com"|g' package.json && \
+    sed -i 's|"homepage": "https://github.com/ofekb/n8n-nodes-telegram-client"|"homepage": "https://example.com"|g' package.json
+
+# Установка зависимостей и сборка
+RUN npm install && npm run build
+
+# Установка рабочей директории
+WORKDIR /app
 
 # Экспозиция порта
 EXPOSE 5678
+
+# Запуск n8n
+CMD ["n8n", "start"]
