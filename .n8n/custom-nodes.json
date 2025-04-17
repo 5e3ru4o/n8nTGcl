@@ -1,0 +1,8 @@
+{
+  "nodes": [
+    {
+      "name": "n8n-nodes-telegram-client",
+      "repo": "https://github.com/ofekb/n8n-nodes-telegram-client.git"
+    }
+  ]
+}
