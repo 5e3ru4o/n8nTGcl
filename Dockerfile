@@ -21,9 +21,8 @@ RUN pnpm build
 
 # Установка пользовательских узлов
 RUN mkdir -p /root/.n8n/custom
-RUN cd /root/.n8n/custom && \
-    git clone https://github.com/ofekb/n8n-nodes-telegram-client.git && \
-    cd n8n-nodes-telegram-client && \
+RUN cp -r /app/packages/custom-nodes/n8n-nodes-telegram-client /root/.n8n/custom/ && \
+    cd /root/.n8n/custom/n8n-nodes-telegram-client && \
     npm install && \
     npm run build
 
