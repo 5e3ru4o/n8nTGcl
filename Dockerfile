@@ -7,14 +7,12 @@ RUN apk add --no-cache git python3 build-base
 RUN npm install -g n8n
 
 # Создание директории для пользовательских узлов
-RUN mkdir -p /root/.n8n/custom
+RUN mkdir -p /root/.n8n/custom/nodes
+RUN mkdir -p /root/.n8n/custom/images
 
-# Установка Telegram Client из GitHub
+# Копируем наш собственный узел Telegram Client
 WORKDIR /root/.n8n/custom
 RUN npm init -y
-RUN npm install github:ofekb/n8n-nodes-telegram-client
-RUN ls -la
-RUN npm list
 
 # Установка рабочей директории
 WORKDIR /app
@@ -32,8 +30,26 @@ ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 # Экспозиция порта
 EXPOSE $PORT
 
-# Копируем скрипт проверки пакета
-COPY check-package.js /app/check-package.js
+# Копируем файлы узла Telegram Client
+COPY telegram-client.js /root/.n8n/custom/nodes/
+COPY telegram.svg /root/.n8n/custom/images/
 
-# Запуск n8n с проверкой пакета
-CMD ["sh", "-c", "node /app/check-package.js > /app/package-check.log && cat /app/package-check.log && n8n start"]
+# Создаем package.json для нашего узла
+RUN echo '{
+  "name": "n8n-nodes-custom",
+  "version": "1.0.0",
+  "description": "Custom nodes for n8n",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["n8n", "nodes"],
+  "author": "",
+  "license": "ISC",
+  "n8n": {
+    "nodes": ["nodes/telegram-client.js"]
+  }
+}' > /root/.n8n/custom/package.json
+
+# Запуск n8n
+CMD ["sh", "-c", "ls -la /root/.n8n/custom && ls -la /root/.n8n/custom/nodes && cat /root/.n8n/custom/package.json && n8n start"]
