@@ -9,10 +9,10 @@ RUN npm install -g n8n
 # Создание директории для пользовательских узлов
 RUN mkdir -p /root/.n8n/custom
 
-# Установка Telegram Client из npm
+# Установка Telegram Client из GitHub
 RUN cd /root/.n8n/custom && \
     npm init -y && \
-    npm install n8n-nodes-telegram-client@0.1.6
+    npm install github:ofekb/n8n-nodes-telegram-client
 
 # Установка рабочей директории
 WORKDIR /app
