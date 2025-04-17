@@ -27,8 +27,16 @@ RUN npm install && npm run build
 # Установка рабочей директории
 WORKDIR /app
 
+# Использование переменной окружения PORT для Railway
+ENV PORT=5678
+ENV N8N_PORT=$PORT
+ENV NODE_ENV=production
+ENV N8N_METRICS=false
+ENV N8N_DIAGNOSTICS=false
+ENV N8N_USER_FOLDER=/root/.n8n
+
 # Экспозиция порта
-EXPOSE 5678
+EXPOSE $PORT
 
 # Запуск n8n
 CMD ["n8n", "start"]
