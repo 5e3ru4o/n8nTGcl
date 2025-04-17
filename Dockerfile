@@ -33,4 +33,4 @@ ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 EXPOSE $PORT
 
 # Запуск n8n с выводом информации о пакетах
-CMD ["sh", "-c", "ls -la /root/.n8n/custom && n8n start"]
+CMD ["sh", "-c", "ls -la /root/.n8n/custom && ls -la /root/.n8n/custom/node_modules && find /root/.n8n/custom -name 'n8n-nodes-telegram-client' -type d | xargs ls -la && n8n start"]
