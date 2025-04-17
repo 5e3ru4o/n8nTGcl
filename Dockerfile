@@ -35,7 +35,7 @@ RUN echo 'version: "3"\n\nservices:\n  telegram-api-server:\n    image: telegram
 
 # Создаем скрипт запуска
 WORKDIR /app
-RUN echo '#!/bin/sh\n\n# Запускаем n8n\nn8n start\n' > start.sh
+RUN echo '#!/bin/sh\n\n# Проверяем содержимое директорий\nls -la /root/.n8n/workflows\nls -la /opt/telegram-api-server\n\n# Запускаем n8n\nn8n start\n' > start.sh
 RUN chmod +x start.sh
 
 # Запуск n8n
