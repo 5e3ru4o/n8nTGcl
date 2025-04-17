@@ -1,28 +1,17 @@
-FROM node:20-alpine
+FROM docker.n8n.io/n8nio/n8n:latest
 
 # Установка необходимых пакетов
-RUN apk add --no-cache git python3 build-base
-
-# Установка n8n
-RUN npm install -g n8n
+USER root
+RUN apt-get update && apt-get install -y git python3 build-essential && apt-get clean
 
 # Создание директории для пользовательских узлов
-RUN mkdir -p /root/.n8n/custom
+RUN mkdir -p /home/node/.n8n/custom
 
-# Копирование пользовательских узлов
-WORKDIR /app
-COPY packages/custom-nodes/n8n-nodes-telegram-client /root/.n8n/custom/n8n-nodes-telegram-client
-
-# Установка и сборка пользовательских узлов
-WORKDIR /root/.n8n/custom/n8n-nodes-telegram-client
-
-# Изменение ссылок на GitHub в package.json
-RUN sed -i 's|"github:ofekb/n8n-nodes-telegram-client"|"*"|g' package.json && \
-    sed -i 's|"url": "https://github.com/ofekb/n8n-nodes-telegram-client.git"|"url": "https://example.com"|g' package.json && \
-    sed -i 's|"homepage": "https://github.com/ofekb/n8n-nodes-telegram-client"|"homepage": "https://example.com"|g' package.json
-
-# Установка зависимостей и сборка
-RUN npm install && npm run build
+# Установка Telegram Client из npm
+RUN cd /home/node/.n8n/custom && \
+    npm init -y && \
+    npm install n8n-nodes-telegram-client@0.1.6 && \
+    chown -R node:node /home/node/.n8n
 
 # Установка рабочей директории
 WORKDIR /app
@@ -33,7 +22,8 @@ ENV N8N_PORT=$PORT
 ENV NODE_ENV=production
 ENV N8N_METRICS=false
 ENV N8N_DIAGNOSTICS=false
-ENV N8N_USER_FOLDER=/root/.n8n
+ENV N8N_USER_FOLDER=/home/node/.n8n
+ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 
 # Экспозиция порта
 EXPOSE $PORT
