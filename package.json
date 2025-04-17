@@ -47,7 +47,6 @@
     "worker": "./packages/cli/bin/n8n worker"
   },
   "devDependencies": {
-    "n8n-nodes-telegram-client": "github:ofekb/n8n-nodes-telegram-client",
     "@biomejs/biome": "^1.9.0",
     "@n8n/eslint-config": "workspace:*",
     "@types/jest": "^29.5.3",

@@ -6,29 +6,64 @@
 
 Этот проект добавляет в n8n возможность отправлять сообщения через ваш личный аккаунт Telegram (не бота). Интеграция основана на [telegram-user-api](https://github.com/CreatmanCEO/telegram-user-api).
 
-### Настройка
+### Быстрый старт / Quick Start
 
-1. Получите API_ID и API_HASH для Telegram:
-   - Перейдите на https://my.telegram.org/auth
-   - Войдите в свой аккаунт Telegram
-   - Выберите "API development tools"
-   - Заполните форму (можно указать любое название приложения)
-   - Сохраните полученные api_id и api_hash
+#### 1. Получите API_ID и API_HASH для Telegram
+- Перейдите на https://my.telegram.org/auth
+- Войдите в свой аккаунт Telegram
+- Выберите "API development tools"
+- Заполните форму (можно указать любое название приложения)
+- Сохраните полученные api_id и api_hash
 
-2. Добавьте переменные окружения в Railway:
-   - `API_ID` - ваш Telegram API ID
-   - `API_HASH` - ваш Telegram API Hash
+#### 2. Запустите telegram-user-api через Docker Compose
+- Убедитесь, что Docker установлен
+- В корне проекта выполните:
+  ```sh
+  docker-compose up -d
+  ```
+- Переменные окружения API_ID и API_HASH можно задать в .env файле или прямо в системе.
+- Данные Telegram будут храниться в папке `telegram-data`.
 
-3. После запуска n8n создайте новый Workflow с названием "telegramUserAPI":
-   - Добавьте узел Function
-   - Скопируйте содержимое файла `/root/.n8n/workflows/telegramUserAgent.js` в этот узел
-   - Сохраните и активируйте этот Workflow
+#### 3. Добавьте кастомный узел Telegram User в n8n
+- После сборки n8n узел появится в редакторе (Telegram User / Пользователь Telegram)
+- Создайте креденшлы Telegram User API и укажите ваши API ID, API Hash и URL (обычно http://localhost:9503/api)
+- Используйте узел в workflow, выбрав команду (send_message/get_contacts), пользователя и текст сообщения.
 
-4. Для использования в других Workflow:
-   - Добавьте новый узел "Workflow"
-   - Настройте его следующим образом:
-     - Имя: `telegramUserAgent`
-     - Workflow ID: выберите созданный ранее "telegramUserAPI"
+---
+
+### English
+
+#### 1. Get your API_ID and API_HASH for Telegram
+- Go to https://my.telegram.org/auth
+- Log in to your Telegram account
+- Select "API development tools"
+- Fill in the form (any app name)
+- Save your api_id and api_hash
+
+#### 2. Run telegram-user-api via Docker Compose
+- Make sure Docker is installed
+- In the project root run:
+  ```sh
+  docker-compose up -d
+  ```
+- Set API_ID and API_HASH in your .env file or system environment.
+- Telegram data will be stored in the `telegram-data` folder.
+
+#### 3. Add the custom Telegram User node to n8n
+- After building n8n, the node will appear in the editor (Telegram User)
+- Create Telegram User API credentials and enter your API ID, API Hash, and API URL (usually http://localhost:9503/api)
+- Use the node in your workflow, select command (send_message/get_contacts), user and message text.
+
+---
+
+### Важно / Important
+- Вся интеграция работает через ваш личный Telegram-аккаунт (не бот)
+- Не передавайте свои ключи третьим лицам
+- Для production рекомендуется использовать HTTPS и ограничить доступ к API
+
+---
+
+### Примеры использования / Usage Examples
 
 ### Примеры использования
 
